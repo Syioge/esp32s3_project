@@ -9,8 +9,8 @@
 #include "bsp_iic.h"
 #include "esp_log.h"
 #include "bsp_at24c02.h"
+#include "bsp_xl9555.h"
 
-static const char *TAG = "MAIN";
 void app_main(void)
 {
     esp_err_t ret; 
@@ -33,40 +33,8 @@ void app_main(void)
     
     bsp_iic_init();
     at24c02_init();
-    
-    uint8_t test_addr = 0x00;
-    uint8_t write_data = 0xA5;
-    uint8_t read_data = 0x00;
 
-    // 字节写入
-    if (at24c02_byte_write(at24c02_dev_handle, test_addr, write_data) == ESP_OK) {
-        ESP_LOGI(TAG, "on addr 0x%02X write 0x%02X ok", test_addr, write_data);
-        vTaskDelay(pdMS_TO_TICKS(10)); // 必须等待内部写周期完成 (≥5ms)
-    }
-
-    // 随机读取验证
-    if (at24c02_random_read(at24c02_dev_handle, test_addr, &read_data) == ESP_OK) {
-        ESP_LOGI(TAG, "slave_addr 0x%02X read: 0x%02X", test_addr, read_data);
-        if (read_data == write_data) {
-            ESP_LOGI(TAG, "data ok!");
-        } else {
-            ESP_LOGE(TAG, "data error!");
-        }
-    }
-
-    // 页写入示例
-    uint8_t page_data[AT24C02_PAGE_SIZE] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
-    if (at24c02_page_write(at24c02_dev_handle, 0x10, page_data, sizeof(page_data)) == ESP_OK) {
-        ESP_LOGI(TAG, "page (addr : 0x10) ok");
-        vTaskDelay(pdMS_TO_TICKS(10)); // 等待内部写周期完成
-    }
-
-    // 顺序读取验证 (从刚才写入的页地址0x10开始)
-    uint8_t read_buffer[AT24C02_PAGE_SIZE] = {0};
-    if (at24c02_sequential_read(at24c02_dev_handle, 0x10, read_buffer, sizeof(read_buffer)) == ESP_OK) {
-        ESP_LOGI(TAG, "read (addr 0x10, len %d) ok", sizeof(read_buffer));
-        ESP_LOG_BUFFER_HEX(TAG, read_buffer, sizeof(read_buffer));
-    }
+    xl9555_init();
 
     while(1) 
     { 

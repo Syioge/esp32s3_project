@@ -1,4 +1,14 @@
 dependencies:
+  espressif/esp_io_expander:
+    component_hash: 7b7f91270172e46ca4597e3874f48d8412e280e8c295559f5922ec38656e3e5f
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=4.4.2'
+    source:
+      registry_url: https://components.espressif.com
+      type: service
+    version: 1.2.1
   idf:
     source:
       type: idf
@@ -10,9 +20,24 @@ dependencies:
       registry_url: https://components.espressif.com/
       type: service
     version: 9.5.0
+  sheldonix/esp_io_expander_xl9555:
+    component_hash: 4c564917698c9e1e42bbc63b50e958c5884e679f8a34a7a9cd03cd6e73f37d7c
+    dependencies:
+    - name: espressif/esp_io_expander
+      registry_url: https://components.espressif.com
+      require: private
+      version: ^1.0
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 0.8.0
 direct_dependencies:
 - idf
 - lvgl/lvgl
-manifest_hash: 2c6b708a2df70edc8c8ea13af5973f79434e01ae9d1fb4a171e4a0607e711707
+- sheldonix/esp_io_expander_xl9555
+manifest_hash: 07fd97bd6ac7521588a1d6a0c1650dbc48d03bb5f37ad8287eb3be88e9105370
 target: esp32s3
 version: 2.0.0
